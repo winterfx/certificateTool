@@ -27,6 +27,7 @@ func (p *PFXParser) Parse(data []byte) ([]*x509.Certificate, error) {
 		}
 	} else {
 		// 使用设置的密码
+		fmt.Printf("使用密码: %s\n", password)
 		_, certs, err = pkcs12.Decode(data, password)
 		if err != nil {
 			return nil, fmt.Errorf("PFX 解析失败（使用密码）: %w", err)

@@ -182,7 +182,8 @@ func handleCertParse(c *gin.Context) {
 		return
 	}
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "error": "证书解析失败"})
+		msg := fmt.Sprintf("Parse error: %v\n", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "error": msg})
 		return
 	}
 	resp := []CertInfo{}
@@ -209,7 +210,8 @@ func handleCertParseWithPassword(c *gin.Context) {
 	parser := parser.PFX.NewParser(parser.WithPassword(password))
 	certs, err := parser.Parse(data)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": "error", "error": "PFX 解析失败，密码可能错误"})
+		errmsg := fmt.Sprintf("Parse error: %v\n", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "error": errmsg})
 		return
 	}
 	resp := []CertInfo{}

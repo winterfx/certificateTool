@@ -11,8 +11,7 @@ const (
 	PEM     CertType = "pem"
 	PFX     CertType = "pfx"
 	DER     CertType = "der"
-	PEM_KEY CertType = "pem_key"
-	CSR     CertType = "csr"
+	CER     CertType = "cer"
 	UNKNOWN CertType = "unknown"
 )
 
@@ -33,11 +32,11 @@ func DetectType(data []byte, filename string) CertType {
 	if strings.HasSuffix(name, ".pem") {
 		return PEM
 	}
-	if strings.HasSuffix(name, ".crt") || strings.HasSuffix(name, ".cer") || strings.HasSuffix(name, ".der") {
+	if strings.HasSuffix(name, ".der") {
 		return DER
 	}
-	if strings.HasSuffix(name, ".csr") {
-		return CSR
+	if strings.HasSuffix(name, ".csr") || strings.HasSuffix(name, ".cer") || strings.HasSuffix(name, ".crt") {
+		return CER
 	}
 	return UNKNOWN
 }
@@ -66,7 +65,7 @@ func (ct CertType) NewParser(p ...ParserOptionFunc) ParserCer {
 		return &PFXParser{options: options}
 	case DER:
 		return &DERParser{options: options}
-	case CSR:
+	case CER:
 		return &CertParser{options: options}
 	default:
 		return nil
