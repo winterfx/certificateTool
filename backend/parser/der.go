@@ -3,7 +3,6 @@ package parser
 import (
 	"crypto/x509"
 	"errors"
-	"fmt"
 )
 
 // DERParser 实现了 Parser 接口，处理 DER 格式证书
