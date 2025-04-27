@@ -157,7 +157,12 @@ function isParsedCertificateData(data: any): data is { certificates: Certificate
 }
 
 
-
+function arrayBufferToHex(arrayBuffer:ArrayBuffer) {
+  const uint8Array = new Uint8Array(arrayBuffer);
+  return uint8Array.reduce((hexString, byte) => {
+    return hexString + byte.toString(16).padStart(2, '0') + ' ';
+  }, '');
+}
 // Update the useEffect to cast the response
 export function CertificateViewer() {
   const {
@@ -311,24 +316,6 @@ export function CertificateViewer() {
                 </Badge>
               </CardDescription>
             </div>
-            <div className="flex space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => copyToClipboard(certificateData, "原始数据已复制到剪贴板")}
-              >
-                <Copy className="h-4 w-4 mr-2" />
-                {copied ? "已复制" : "复制原始数据"}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => downloadAsFile(certificateData, `${fileName || "certificate"}.txt`)}
-              >
-                <Download className="h-4 w-4 mr-2" />
-                下载原始数据
-              </Button>
-            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -427,18 +414,13 @@ export function CertificateViewer() {
 
             <TabsContent value="raw">
               <div className="bg-gray-50 p-4 rounded-md">
-                <div className="flex justify-end mb-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => copyToClipboard(certificateData, "原始数据已复制到剪贴板")}
-                  >
-                    <Copy className="h-4 w-4 mr-2" />
-                    复制
-                  </Button>
-                </div>
                 <div className="overflow-auto max-h-[400px]">
-                  <pre className="text-xs whitespace-pre-wrap break-all">{certificateData}</pre>
+                  <pre className="text-xs whitespace-pre-wrap break-all">    
+                    {certificateData instanceof ArrayBuffer
+                    ? // 如果是 ArrayBuffer, 转换为二进制字符串
+                    arrayBufferToHex(certificateData)
+                    : certificateData}
+                  </pre>
                 </div>
               </div>
             </TabsContent>

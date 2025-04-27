@@ -14,7 +14,6 @@ type DERParser struct {
 // Parse 方法解析 DER 格式证书
 func (p *DERParser) Parse(data []byte) ([]*x509.Certificate, error) {
 	// 先尝试用 x509.ParseCertificates 解析所有证书（处理 trailing data）
-	fmt.Println(data)
 	certs, err := x509.ParseCertificates(data)
 	if err != nil {
 		return nil, errors.New("DER 证书解析失败: " + err.Error())

@@ -14,7 +14,7 @@ interface CertificateStore {
   isProcessing: boolean
   certificateResponse: CertificateResponse | null
   jsonViewData: any | null
-  certificateData: string | null
+  certificateData: string | ArrayBuffer | null
   setFileName: (name: string | null) => void
   setFileType: (type: string) => void
   setSelectedFileId: (id: string | null) => void
@@ -25,7 +25,7 @@ interface CertificateStore {
   setIsProcessing: (value: boolean) => void
   setCertificateResponse: (data: CertificateResponse | null) => void
   setJsonViewData: (data: any | null) => void
-  setCertificateData: (data: string | null) => void
+  setCertificateData: (data: string | ArrayBuffer | null ) => void
   resetPassword: () => void
   reset: () => void
 }

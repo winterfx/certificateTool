@@ -16,7 +16,7 @@ interface FileStatus {
   name: string
   type: string
   status: "pending" | "encrypted" | "success" | "error"
-  data: string | null
+  data: string | ArrayBuffer | null
   error?: string
 }
 
@@ -94,7 +94,7 @@ export function CertificateUploader() {
 
         reader.onload = async (e) => {
           const result = e.target?.result
-          let fileData: string | null = null
+          let fileData:  string | ArrayBuffer | null = null
           let fileStatus: "pending" | "encrypted" | "success" | "error" = "success"
 
           if (typeof result === "string") {
@@ -104,8 +104,7 @@ export function CertificateUploader() {
               fileStatus = "encrypted"
             }
           } else if (result instanceof ArrayBuffer) {
-            const uint8Array = new Uint8Array(result)
-            fileData = btoa(String.fromCharCode.apply(null, Array.from(uint8Array)))
+            fileData = result
           }
 
           // Keep encrypted status for p12/pfx files
@@ -149,9 +148,8 @@ export function CertificateUploader() {
     setFiles((prev) => [...prev, ...newFiles])
   }
 
-  const selectFile = (id: string, data: string | null, name: string, type: string) => {
+  const selectFile = (id: string, data: string | ArrayBuffer | null, name: string, type: string) => {
     if (!data) return
-
     setCertificateData(data)
     setFileName(name)
     setFileType(type)
@@ -233,7 +231,7 @@ export function CertificateUploader() {
             id="file-upload"
             type="file"
             className="hidden"
-            accept=".pem,.crt,.cer,.pfx,.p12,.key,.der.,.csr"
+            accept=".pem,.crt,.cer,.pfx,.p12,.key,.der,.csr"
             onChange={handleFileChange}
             multiple
           />
