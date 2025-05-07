@@ -8,10 +8,9 @@ import (
 type CertType string
 
 const (
-	PEM     CertType = "pem"
 	PFX     CertType = "pfx"
-	DER     CertType = "der"
 	CER     CertType = "cer"
+	CSR     CertType = "csr"
 	UNKNOWN CertType = "unknown"
 )
 
@@ -29,16 +28,7 @@ func DetectType(data []byte, filename string) CertType {
 	if strings.HasSuffix(name, ".pfx") || strings.HasSuffix(name, ".p12") {
 		return PFX
 	}
-	if strings.HasSuffix(name, ".pem") {
-		return PEM
-	}
-	if strings.HasSuffix(name, ".der") {
-		return DER
-	}
-	if strings.HasSuffix(name, ".csr") || strings.HasSuffix(name, ".cer") || strings.HasSuffix(name, ".crt") {
-		return CER
-	}
-	return UNKNOWN
+	return CER
 }
 
 type ParserOptions struct {
@@ -59,12 +49,8 @@ func (ct CertType) NewParser(p ...ParserOptionFunc) ParserCer {
 		f(options)
 	}
 	switch ct {
-	case PEM:
-		return &PEMParser{options: options}
 	case PFX:
 		return &PFXParser{options: options}
-	case DER:
-		return &DERParser{options: options}
 	case CER:
 		return &CertParser{options: options}
 	default:
